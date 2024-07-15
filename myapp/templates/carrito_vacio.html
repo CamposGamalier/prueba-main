@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+
+
+    .card {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-bottom: 310px;
+        margin-top: 250px;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+
+    .card h1 {
+        color: #ff4d4d; /* Color rojo */
+        margin-bottom: 10px;
+    }
+
+    .close-icon {
+        font-size: 24px;
+        color: #ff4d4d; /* Color rojo */
+        cursor: pointer;
+    }
+</style>
+
+<div class="card">
+    <h1>No ha seleccionado ningún artículo</h1>
+    <p>Por favor, agregue artículos al carrito antes de continuar.</p>
+    <span class="close-icon" onclick="cerrarCarta()">X</span>
+</div>
+
+<script>
+    function cerrarCarta() {
+        window.location.href = "{% url 'hombre' %}"; // Redirige a la página principal al cerrar la carta
+    }
+</script>
+{% endblock %}

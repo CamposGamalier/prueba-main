@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">✔</div>
+        <h1>Compra Exitosa</h1>
+        <p>Gracias por tu compra. Serás redirigido al inicio en unos segundos.</p>
+    </div>
+</div>
+
+<script>
+    // Redirigir al índice después de 5 segundos
+    setTimeout(function() {
+        window.location.href = "{% url 'index' %}";
+    }, 5000);
+</script>
+
+<style>
+.success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.success-card {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.success-icon {
+    font-size: 50px;
+    color: green;
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}

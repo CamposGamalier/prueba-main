@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Búsqueda de Productos - Mi Tienda{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos para la búsqueda de productos */
+    .container {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .grid-item {
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    .producto-card {
+        position: relative;
+    }
+
+    .producto-imagen {
+        width: 100%;
+        height: auto;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+        color: white;
+        opacity: 0; /* Ocultar overlay inicialmente */
+        transition: opacity 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .grid-item:hover .overlay {
+        opacity: 1; /* Mostrar overlay al pasar el ratón */
+    }
+
+    .producto-info {
+        position: relative;
+        z-index: 1; /* Asegurar que la información del producto esté sobre el overlay */
+        padding: 15px;
+    }
+
+    .producto-info h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+
+    .producto-descripcion {
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #fff;
+    }
+
+    .producto-precio {
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .add-to-cart-btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart-btn:hover {
+        background-color: #45a049;
+    }
+
+    /* Estilos para el footer */
+    footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+
+<div class="container">
+    <h2>Resultados de Búsqueda para "{{ query }}"</h2>
+    <div class="grid-container">
+        {% for producto in productos %}
+        <div class="grid-item">
+            <div class="producto-card">
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen">
+                <div class="overlay">
+                    <div class="producto-info">
+                        <h3>{{ producto.nombre }}</h3>
+                        <p class="producto-descripcion">{{ producto.descripcion }}</p>
+                        <p class="producto-precio">Precio: ${{ producto.precio }}</p>
+                        <form action="{% url 'agregar_al_carrito' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_ids" value="{{ producto.id }}">
+                            <input type="hidden" name="quantities" value="1">
+                            <button type="submit" class="add-to-cart-btn">Añadir al carrito</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No se encontraron productos para "{{ query }}".</p>
+        {% endfor %}
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Mi Tienda. Todos los derechos reservados.</p>
+</footer>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<style>
+.cart-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 250px;
+    margin-bottom: 310px;
+}
+
+.cart-header {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.cart-table th, .cart-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-table th {
+    background-color: #f2f2f2;
+}
+
+.cart-table img {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.cart-total {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 20px;
+}
+
+.cart-buttons {
+    text-align: right;
+}
+
+.cart-buttons button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cart-buttons button:hover {
+    background-color: #45a049;
+}
+</style>
+
+<div class="cart-container">
+    <img src="{% static 'images/dmaldy-fotor-2024032612528.png' %}" alt="Logo" class="img-fluid mb-3" style="max-width: 150px;">
+    <div class="cart-header">Carrito de Compras</div>
+
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Imagen</th>
+                <th>Nombre del Producto</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Total por Ítem</th>
+                <th>Fecha de Compra</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in carrito_detalles %}
+            <tr>
+                <td>{{ item.usuario }}</td>
+                <td>{{ item.correo }}</td>
+                <td><img src="{{ item.imagen.url }}" alt="{{ item.nombre }}" width="50"></td>
+                <td>{{ item.nombre }}</td>
+                <td>${{ item.precio_unitario }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.total_por_item }}</td>
+                <td>{{ item.fecha_compra }}</td>
+                <td>
+                    <form action="{% url 'hombre' %}" method="post">
+                        {% csrf_token %}
+                        
+                        <button type="submit">volver</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="cart-total">Total a pagar: ${{ total }}</div>
+
+    <div class="cart-buttons">
+        <form action="{% url 'comprar' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Comprar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

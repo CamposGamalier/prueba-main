@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Mi Cuenta - DeMaldyStore{% endblock %}
+
+{% block content %}
+<style>
+    /* Estilos CSS */
+    .card {
+        width: 400px;
+        margin: 0 auto; /* Alineación al centro */
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: #fff;
+        text-align: center;
+        border-radius: 10px 10px 0 0;
+        padding: 10px 0;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .home-link {
+        text-align: center;
+        margin-top: 20px;
+        display: block;
+    }
+
+    .purchase-history-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .purchase-history-table th,
+    .purchase-history-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .purchase-history-table th {
+        background-color: #f2f2f2;
+    }
+
+    .purchase-history-table img {
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    .no-history-message {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .edit-button {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card">
+        <h1 class="card-header">Mi Cuenta</h1>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <!-- Información del perfil del usuario -->
+            <div class="readonly">
+                <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+                <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+                <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+                <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+                <button class="btn btn-primary edit-button" onclick="enableEditMode()">Editar Perfil</button>
+            </div>
+            
+            <!-- Historial de compras -->
+            <div class="micuenta-container">
+                <h2>Historial de Compras</h2>
+                {% if purchase_receipts %}
+                    <table class="purchase-history-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha de Compra</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for receipt in purchase_receipts %}
+                                {% for detail in receipt.details.all %}
+                                    <tr>
+                                        <td>{{ receipt.purchase_date }}</td>
+                                        <td>
+                                            <img src="{{ detail.product.imagen.url }}" alt="{{ detail.product.nombre }}" width="50">
+                                            {{ detail.product.nombre }}
+                                        </td>
+                                        <td>{{ detail.quantity }}</td>
+                                        <td>${{ detail.total_price }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-history-message">No hay historial de compras disponible.</p>
+                {% endif %}
+            </div>
+            
+            <!-- Formulario para editar perfil -->
+            <form method="POST" enctype="multipart/form-data" class="edit-mode" style="display: none;">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a href="{% url 'index' %}" class="home-link">Home</a> <!-- Enlace a la página de inicio -->
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function enableEditMode() {
+        document.querySelector('.edit-mode').style.display = 'block';
+        document.querySelector('.readonly').style.display = 'none';
+    }
+</script>
+{% endblock %}

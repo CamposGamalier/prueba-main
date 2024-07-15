@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    .purchase-history-container {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+    
+    .purchase-history-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .purchase-history-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    .purchase-history-table th, .purchase-history-table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    
+    .purchase-history-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .product-info {
+        display: flex;
+        align-items: center;
+    }
+    
+    .product-info img {
+        max-width: 50px;
+        margin-right: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1>Historial de Compras</h1>
+        </div>
+        <div class="card-body">
+            <div class="purchase-history-container">
+                <p>{{ message }}</p>
+                <div class="table-responsive">
+                    <table class="table table-striped purchase-history-table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Fecha de Compra</th>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Correo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in purchase_details %}
+                            <tr>
+                                <td>{{ detail.purchase_date }}</td>
+                                <td>
+                                    <div class="product-info">
+                                        <img src="{{ detail.product.imagen.url }}" alt="{{ detail.product.nombre }}">
+                                        <span>{{ detail.product.nombre }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ detail.quantity }}</td>
+                                <td>${{ detail.total_price }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
